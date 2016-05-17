@@ -1,28 +1,32 @@
 {
-  "name": "mailchimp-v3-api",
-  "version": "0.0.3",
-  "description": "NodeJS support for the mailchimp v3 API",
-  "main": "mailchimp-v3-api.js",
+  "name": "mailchimp-v3-api-fetch",
+  "version": "0.0.1",
+  "description": "NodeJS support for the mailchimp v3 API, using `node-fetch`",
+  "main": "mailchimp-v3-api-fetch.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kubrickology/mailchimp-API-v3.git"
+    "url": "git+https://github.com/viki53/mailchimp-API-v3.git"
   },
   "keywords": [
     "Mailchimp",
     "API",
-    "v3"
+    "v3",
+    "fetch",
+    "promise"
   ],
-  "author": "Bob van Luijt <bob@kubrickolo.gy> (http://kubrickolo.gy)",
+  "author": "Corentin Hatte <contact@corentin-hatte.eu> (https://www.corentin-hatte.eu)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kubrickology/mailchimp-API-v3/issues"
+    "url": "https://github.com/viki53/mailchimp-API-v3/issues"
   },
-  "homepage": "https://github.com/kubrickology/mailchimp-API-v3#readme",
+  "homepage": "https://github.com/viki53/mailchimp-API-v3#readme",
   "dependencies": {
-    "jshint": "^2.9.1",
     "node-fetch": "^1.5.2"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.1"
   }
 }
