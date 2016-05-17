@@ -52,8 +52,6 @@ class MailChimpV3 {
 	*/
 	connect(endpoint, method, data){
 
-		var decodedData = JSON.stringify(data);
-
 		/**
 		* Set request options
 		*/
@@ -62,7 +60,6 @@ class MailChimpV3 {
 				'Content-Type': 'application/json',
 				'Authorization': 'Basic ' + new Buffer('any:' + this.key).toString('base64')
 			},
-			port: 443,
 			method: method
 		};
 
@@ -70,30 +67,26 @@ class MailChimpV3 {
 		* If data is set, add to POST
 		*/
 		if (data) {
-			options.headers['Content-Length'] = decodedData.length;
+			var decodedData = JSON.stringify(data);
+			options.headers['Content-Length'] = decodedData.length.toString();
+			options.body = decodedData;
 		} else {
 			if (this.debug) {
 				console.log('** No data is set (sometimes this is ok, for example with a GET request)');
 			}
 		}
 
+		console.log(endpoint);
+		console.dir(options);
+
 		/**
 		* Do the actual request, console.logs if debug === true
 		*/
-
-		if (decodedData) {
-			options.body = decodedData;
-		}
-
-		console.dir(options);
 
 		var debug = this.debug;
 
 		return fetch('https://' + this.location + '.api.mailchimp.com/3.0' + endpoint, options)
 		.then(function(res) {
-			if (debug) {
-				console.dir(res.headers);
-			}
 			return res.json();
 		});
 	}
