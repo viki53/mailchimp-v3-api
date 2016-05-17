@@ -1,21 +1,21 @@
 'use strict';
 /**
- * Mailchimps API V3 integration 
+ * Mailchimps API V3 integration
  */
-var HTTPS 		= require('https'),
-	Q 		= require('q'),
-	STRINGDECODER 	= require('string_decoder').StringDecoder,
-	DECODER 	= new STRINGDECODER('utf8');
+var HTTPS 		  = require('https'),
+	Q 		      = require('q'),
+	STRINGDECODER = require('string_decoder').StringDecoder,
+	DECODER 	  = new STRINGDECODER('utf8');
 
 /**
  * The Mailchimp v3 API integration for nodejs
  * Detailed information can be found in the readme.md file
- * 
+ *
  * @author      Bob van Luijt
  * @version     0.1
  */
 class MailChimpV3 {
-    
+
    	/**
 	 * Constructor function
 	 *
@@ -150,54 +150,23 @@ class MailChimpV3 {
 	 * @return {Object}		returns the promises then() and error()
 	 */
     get(endpoint){
-    	/**
-    	 * Using Q for promises
-    	 */
-    	var deferred = Q.defer();
-    	/**
-    	 * Do the request and prepare promise
-    	 */
-    	this
-	    	.connect(endpoint, 'GET')
-	    	.then(function(d){
-	    		deferred.resolve(d);
-	    	});
-	    	//.error(function(e){
-	    	//	console.error('OOPS ' + e);
-	    	//});
-    	return deferred.promise;
+    	return this.connect(endpoint, 'GET');
     }
 
     post(endpoint, data){
-    	/**
-    	 * Using Q for promises
-    	 */
-    	var deferred = Q.defer();
-
-    	/**
-    	 * Do the request and prepare promise
-    	 */
-    	this
-	    	.connect(endpoint, 'POST', data)
-	    	.then(function(d){
-	    		deferred.resolve(d);
-	    	});
-	    	//.error(function(e){
-	    	//	console.error('OOPS ' + e);
-	    	//});
-    	return deferred.promise;
+    	return this.connect(endpoint, 'POST', data);
     }
 
-    patch(endpoint){
-
+    patch(endpoint, data){
+    	return this.connect(endpoint, 'PATCH', data);
     }
 
-    put(endpoint){
-
+    put(endpoint, data){
+		return this.connect(endpoint, 'PUT', data);
     }
 
-    delete(endpoint){
-
+    delete(endpoint, data){
+		return this.connect(endpoint, 'DELETE', data);
     }
 
 }
