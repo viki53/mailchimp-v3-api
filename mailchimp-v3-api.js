@@ -30,6 +30,7 @@ class MailChimpV3 {
     	} else {
 	    	this.key = i.key;
 	    }
+
 	    /**
     	 * Check if custom server location is set, if not, set to 12
     	 */
@@ -38,14 +39,11 @@ class MailChimpV3 {
     	} else {
 	    	this.location = i.location;
 	    }
+
 	    /**
     	 * Check if debug is set, if not, set to false
     	 */
-    	if(typeof i.debug === 'undefined'){
-    		this.debug = false;
-    	} else {
-	    	this.debug = true;
-	    }
+		this.debug = !!i.debug;
     }
 
 	/**
@@ -87,7 +85,7 @@ class MailChimpV3 {
 				'Content-Length': decodedData.length
 			};
 	    } else {
-	    	if(this.debug === true){
+	    	if(this.debug){
 	    		console.log('** No data is set (sometimes this is ok, for example with a GET request)');
 	    	}
 	    }
@@ -98,7 +96,7 @@ class MailChimpV3 {
 		var resRaw = [];
 		var req = HTTPS.request(options, (res) => {
 
-		  	if(this.debug === true){
+			if(this.debug){
 		  		console.log('** statusCode: ', res.statusCode);
 		  		console.log('** headers: ', res.headers);
 		  		console.log('** response: ' + res);
@@ -128,8 +126,9 @@ class MailChimpV3 {
 		 * Send error promise if error occured
 		 */
 		req.on('error', (e) => {
-			if(this.debug === true){
+			if(this.debug){
 				console.error('ERROR: ' + e);
+				console.dir(req);
 			}
 			deferred.reject(e);
 		});
