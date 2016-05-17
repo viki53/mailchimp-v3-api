@@ -16,11 +16,11 @@ _note: You need a nodejs or iojs version that supports ES6_
 - First include the Mailchimp-v3 script and add the key.
 
 ```js
-var MAILCHIMP_V3 = require('./mailchimp-v3-api.js');
-var MAILCHIMP = new MAILCHIMP_V3({
-  key: '[KEY]',       // mandatory, API key http://kb.mailchimp.com/accounts/management/about-api-keys
-  debug: [boolean],   // optional, auto set to false
-  location: [string]  // optional, one of Mailchimp locations: http://developer.mailchimp.com/status/ example: 'us12'
+var mailchimp_api = require('mailchimp-v3-api-fetch');
+var mailchimp = new mailchimp_api({
+    key: '[KEY]',    // required, API key http://kb.mailchimp.com/accounts/management/about-api-keys
+    debug: false,    // optional
+    location: 'us12' // optional, one of Mailchimp locations: http://developer.mailchimp.com/status/
 });
 ```
 
@@ -36,9 +36,9 @@ _Note: Always include the complete path, like '/lists' or '/lists/{list_id}/inte
 
 Example:
 ```js
-MAILCHIMP
+mailchimp
 	.get('/lists')
-	.then(function(response){
+	.then(function (response) {
 		console.log(response);
 	})
 ```
