@@ -1,17 +1,17 @@
 'use strict';
+
 /**
  * Mailchimps API V3 integration
  */
-var HTTPS 		  = require('https'),
-	Q 		      = require('q'),
-	STRINGDECODER = require('string_decoder').StringDecoder,
-	DECODER 	  = new STRINGDECODER('utf8');
+if (!fetch) {
+	var fetch = require('node-fetch');
+}
 
 /**
  * The Mailchimp v3 API integration for nodejs
  * Detailed information can be found in the readme.md file
  *
- * @author      Bob van Luijt
+ * @author      Corentin Hatte
  * @version     0.1
  */
 class MailChimpV3 {
@@ -25,20 +25,16 @@ class MailChimpV3 {
     	/**
     	 * Report error when key is not set, otherwise set key to this.key
     	 */
-    	if(typeof i.key === 'undefined'){
-    		console.warn('WARN: Key is undefined, add your API KEY');
-    	} else {
-	    	this.key = i.key;
-	    }
+    	if (!i.key) {
+    		throw new Error('Mailchimp API key is undefined, add your API KEY');
+    	}
+
+		this.key = i.key;
 
 	    /**
     	 * Check if custom server location is set, if not, set to 12
     	 */
-    	if(typeof i.location === 'undefined'){
-    		this.location = 'us12';
-    	} else {
-	    	this.location = i.location;
-	    }
+    	this.location = i.location || 'us12';
 
 	    /**
     	 * Check if debug is set, if not, set to false
@@ -59,10 +55,6 @@ class MailChimpV3 {
     	var decodedData = JSON.stringify(data);
 
     	/**
-    	 * Using Q for promises
-    	 */
-    	var deferred = Q.defer();
-    	/**
     	 * Set request options
     	 */
     	var options = {
@@ -70,22 +62,20 @@ class MailChimpV3 {
     			'Content-Type': 'application/json'
     		},
     		auth: 'anystring:' + this.key,
-			hostname: this.location + '.api.mailchimp.com',
 			port: 443,
-			path: '/3.0' + endpoint,
 			method: method
 		};
 
 		/**
 		 * If data is set, add to POST
 		 */
-		if(typeof data !== 'undefined'){
+		if (data) {
 			options['headers'] = {
 				'Content-Type': 'application/x-www-form-urlencoded',
 				'Content-Length': decodedData.length
 			};
 	    } else {
-	    	if(this.debug){
+	    	if (this.debug) {
 	    		console.log('** No data is set (sometimes this is ok, for example with a GET request)');
 	    	}
 	    }
@@ -93,52 +83,20 @@ class MailChimpV3 {
 		/**
 		 * Do the actual request, console.logs if debug === true
 		 */
-		var resRaw = [];
-		var req = HTTPS.request(options, (res) => {
 
-			if(this.debug){
-		  		console.log('** statusCode: ', res.statusCode);
-		  		console.log('** headers: ', res.headers);
-		  		console.log('** response: ' + res);
+ 		if (decodedData) {
+ 			options.body = decodedData;
+ 		}
+
+		var debug = this.debug;
+
+		return fetch(this.location + '.api.mailchimp.com/3.0' + endpoint, options)
+		.then(function(res) {
+			if (debug) {
+				console.dir(res);
 			}
-			res.on('data', (d) => {
-				resRaw.push(DECODER.write(d));
-			});
-
-			res.on('end', () => {
-				/**
-				* Sending the response as a deffer
-				*/
-				var jsonRes = JSON.parse(resRaw.join(''));
-				deferred.resolve(jsonRes);
-			});
-
+			return res.json();
 		});
-
-		/**
-		 * If data is set, add to POST
-		 */
-		if(method === 'POST'){
-	    	req.write(decodedData);
-	    }
-
-		/**
-		 * Send error promise if error occured
-		 */
-		req.on('error', (e) => {
-			if(this.debug){
-				console.error('ERROR: ' + e);
-				console.dir(req);
-			}
-			deferred.reject(e);
-		});
-
-		req.end();
-
-		/**
-		 * Return the promise
-		 */
-		return deferred.promise;
     }
 
 	/**
