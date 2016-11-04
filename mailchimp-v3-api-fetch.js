@@ -21,7 +21,7 @@ class MailChimpV3 {
 	*
 	* @param {string} 	i Object with key and optional host information
 	*/
-	constructor(i) {
+	constructor (i) {
 		/**
 		* Report error when key is not set, otherwise set key to this.key
 		*/
@@ -50,7 +50,7 @@ class MailChimpV3 {
 	* @param {string}	method Method set for request type
 	* @return {Object}	returns the promises then() and error()
 	*/
-	connect(endpoint, method, data){
+	connect (endpoint, method, data) {
 
 		/**
 		* Set request options
@@ -76,17 +76,17 @@ class MailChimpV3 {
 			}
 		}
 
-		console.log(endpoint);
-		console.dir(options);
+		if (this.debug) {
+			console.log(endpoint);
+			console.dir(options);
+		}
 
 		/**
-		* Do the actual request, console.logs if debug === true
+		* Do the actual request
 		*/
 
-		var debug = this.debug;
-
 		return fetch('https://' + this.location + '.api.mailchimp.com/3.0' + endpoint, options)
-		.then(function(res) {
+		.then(function (res) {
 			return res.json();
 		});
 	}
@@ -98,23 +98,23 @@ class MailChimpV3 {
 	* @param {endpoint}	endpoint Based on http://goo.gl/hAZnhM
 	* @return {Object}		returns the promises then() and error()
 	*/
-	get(endpoint){
+	get (endpoint) {
 		return this.connect(endpoint, 'GET');
 	}
 
-	post(endpoint, data){
+	post (endpoint, data) {
 		return this.connect(endpoint, 'POST', data);
 	}
 
-	patch(endpoint, data){
+	patch (endpoint, data) {
 		return this.connect(endpoint, 'PATCH', data);
 	}
 
-	put(endpoint, data){
+	put (endpoint, data) {
 		return this.connect(endpoint, 'PUT', data);
 	}
 
-	delete(endpoint, data){
+	delete (endpoint, data) {
 		return this.connect(endpoint, 'DELETE', data);
 	}
 
